@@ -3,33 +3,29 @@ body {
 }
 
 header {
-    height: 140px;
-    width: 100%;
-    background-color: gainsboro;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #4C4298;
-    color: white;
-    font-size: 32px;
+  height: 140px;
+  width: 100%;
+  background-color: gainsboro;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #4c4298;
+  color: white;
+  font-size: 30px;
 }
-
-
 
 header img {
-    height: 140px;
-    margin-left: 16px;
+  height: 140px;
+  margin-left: 16px;
 }
-
 
 .headlineDiv {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
 
 #container {
   display: flex;
@@ -58,7 +54,6 @@ header img {
 
 .pokemonCardBox:hover {
   transform: scale(1.08);
-
 }
 
 .pokemonImg {
@@ -66,24 +61,23 @@ header img {
 }
 
 .pokemonPreInfo {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
 }
 
 .pokemonTypeInfo {
-    text-align: center;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    width: 60px;
-    border-radius: 5px;
-    color: white;
+  text-align: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 60px;
+  border-radius: 5px;
+  color: white;
 }
 
-.pokemonCardBox h2{
-    margin: 0;
-    color: #25204e;
+.pokemonCardBox h2 {
+  margin: 0;
+  color: #25204e;
 }
 
 /* Pokemon Types Colors */
@@ -163,73 +157,73 @@ header img {
 /* Pokemon Types Colors bright*/
 
 .type-normal-bright {
-    background-color: #c4c3a3;
-  }
-  
-  .type-fire-bright {
-    background-color: #f38c58;
-  }
-  
-  .type-water-bright {
-    background-color: #87a4ff;
-  }
-  
-  .type-electric-bright {
-    background-color: #fce25b;
-  }
-  
-  .type-grass-bright {
-    background-color: #9ed07e;
-  }
-  
-  .type-ice-bright {
-    background-color: #b5e1ec;
-  }
-  
-  .type-fighting-bright {
-    background-color: #e24c45;
-  }
-  
-  .type-poison-bright {
-    background-color: #c05ab5;
-  }
-  
-  .type-ground-bright {
-    background-color: #f0d479;
-  }
-  
-  .type-flying-bright {
-    background-color: #b8a5f9;
-  }
-  
-  .type-psychic-bright {
-    background-color: #ff83b1;
-  }
-  
-  .type-bug-bright {
-    background-color: #b6c325;
-  }
-  
-  .type-rock-bright {
-    background-color: #c4b748;
-  }
-  
-  .type-ghost-bright {
-    background-color: #8f85b8;
-  }
-  
-  .type-dragon-bright {
-    background-color: #9577ff;
-  }
-  
-  .type-dark-bright {
-    background-color: #8c7b67;
-  }
-  
-  .type-steel-bright {
-    background-color: #bfc0d5;
-  }
-  
-  .type-fairy-bright {
-    background-color: #e49fcb;
-  }
+  background-color: #c4c3a3;
+}
+
+.type-fire-bright {
+  background-color: #f38c58;
+}
+
+.type-water-bright {
+  background-color: #87a4ff;
+}
+
+.type-electric-bright {
+  background-color: #fce25b;
+}
+
+.type-grass-bright {
+  background-color: #9ed07e;
+}
+
+.type-ice-bright {
+  background-color: #b5e1ec;
+}
+
+.type-fighting-bright {
+  background-color: #e24c45;
+}
+
+.type-poison-bright {
+  background-color: #c05ab5;
+}
+
+.type-ground-bright {
+  background-color: #f0d479;
+}
+
+.type-flying-bright {
+  background-color: #b8a5f9;
+}
+
+.type-psychic-bright {
+  background-color: #ff83b1;
+}
+
+.type-bug-bright {
+  background-color: #b6c325;
+}
+
+.type-rock-bright {
+  background-color: #c4b748;
+}
+
+.type-ghost-bright {
+  background-color: #8f85b8;
+}
+
+.type-dragon-bright {
+  background-color: #9577ff;
+}
+
+.type-dark-bright {
+  background-color: #8c7b67;
+}
+
+.type-steel-bright {
+  background-color: #bfc0d5;
+}
+
+.type-fairy-bright {
+  background-color: #e49fcb;
+}

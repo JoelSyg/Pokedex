@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body onload="renderPokedex()">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body onload="renderPokedex(offset, limit)">
     <header>
-        <img src="./img/pokeball.png" alt="">
-        <h1>Pokémon Database</h1>    
+      <img src="./img/pokeball.png" alt="" />
+      <h1>Pokémon Database</h1>
     </header>
 
     <div class="headlineDiv">
-    <h2>Pokédex</h2>
-    <span>Search and filter Pokémon easily to find exactly what you're looking for</span>
-    <form action="">
-        <input type="text">
-        <button>suchen</button>
-    </form>
+      <h2>Pokédex</h2>
+      <span>Search and filter Pokémon easily to find exactly what you're looking for</span>
+      <input id="searchInput" type="text" placeholder="Search" />
+      <button onclick="searchPokemon()">search</button>
     </div>
     <div id="container"></div>
-</body>
-</html>
 
+    <script src="script.js"></script>
+  </body>
+</html>
