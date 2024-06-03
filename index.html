@@ -5,21 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
   </head>
   <body onload="renderPokedex(offset, limit)">
     <header>
       <img src="./img/pokeball.png" alt="" />
-      <h1>Pokémon Database</h1>
+      <h1>Pokédex</h1>
+      <div>
+        <input id="searchInput" type="text" placeholder="Search" />
+        <button onclick="searchPokemon()">search</button>
+      </div>
     </header>
 
-    <div class="headlineDiv">
-      <h2>Pokédex</h2>
-      <span>Search and filter Pokémon easily to find exactly what you're looking for</span>
-      <input id="searchInput" type="text" placeholder="Search" />
-      <button onclick="searchPokemon()">search</button>
+    <div id="mainContainer"></div>
+    <div id="loadingAnimationDiv"></div>
+    <div id="pokemonModal" class="modal dnone">
+      <div class="modalBg" onclick="closePokemonModal()"></div>
+      <div id="modalContent"></div>
     </div>
-    <div id="container"></div>
-
-    <script src="script.js"></script>
   </body>
 </html>
