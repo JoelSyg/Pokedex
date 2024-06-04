@@ -6,14 +6,27 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Leckerli+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Leckerli+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body onload="renderPokedex(offset, limit)">
     <header>
       <img src="./img/pokeball.png" alt="" />
+      <!-- <img src="./img/pokedexheader.png" alt=""> -->
       <h1>Pokédex</h1>
-      <div>
-        <input id="searchInput" type="text" placeholder="Search" />
-        <button onclick="searchPokemon()">search</button>
+      <div id="searchDivHeader">
+        <input id="searchInput" type="text" placeholder='"min 3 character"' oninput="enableSearchButton()" />
+        <button id="searchButton" onclick="searchPokemon()" disabled>search</button>
       </div>
     </header>
 

@@ -42,13 +42,14 @@ function pokemonHtml(pokemonJson) {
   const type2 = pokemonJson["types"][1] ? pokemonJson["types"][1].type.name : null;
 
   return `
-    <div id="pokemon${pokemonJson.id}" class="pokemonCardBox" onclick="openPokemonModal(${pokemonJson.id})">
-      <div class="pokemonImgBox type-${type1}-bright">
+    <div id="pokemon${pokemonJson.id}" class="pokemonCardBox type-${type1}-bright" onclick="openPokemonModal(${pokemonJson.id})">
+      <div class="pokemonImgBox">
         <img class="pokemonImg" src="${pokemonJson["sprites"]["other"]["official-artwork"]["front_default"]}">
       </div>
+      <div class="pokemonCardBottom">
       <div class="pokemonPreInfo">
-        <div>
-          <b># ${pokemonJson.id}</b>
+        <div class="pokemonCardId">
+          <b>#${pokemonJson.id}</b>
         </div>
         <div class="pokemonTypes">
           <div class="pokemonTypeInfo type-${type1}">
@@ -67,6 +68,7 @@ function pokemonHtml(pokemonJson) {
       <h2>
         ${capitalizeFirstLetter(pokemonJson["forms"][0]["name"])}
       </h2>
+      </div>
     </div>`;
 }
 
@@ -79,6 +81,7 @@ async function renderOpenedPokemon(pokemonId) {
   const type1 = pokemonJson.types[0].type.name;
   const backgroundColor = typeColors[type1];
   modalContent.style.backgroundColor = backgroundColor;
+  renderOpenedPokemonImg(pokemonJson);
 }
 
 function openedPokemonHtml(pokemonJson) {
@@ -103,15 +106,22 @@ function openedPokemonHtml(pokemonJson) {
               : ""
           }
         </div>
-      <div class="openedPokemonImgDiv">
-      <img id="lastImage" onclick="lastImage(${pokemonJson.id})" src="./img/arrow_left.png" alt="">
-      <img class="openedPokemonImg" src="${pokemonJson["sprites"]["other"]["official-artwork"]["front_default"]}">
-      <img id="nextImage" onclick="nextImage(${pokemonJson.id})" src="./img/arrow_right.png" alt="">
+      <div id="openedPokemonImgDiv">
       </div>
   </div>
   <div class="openedPokemonInfoDiv">
-  </div>
-  `;
+  </div>`;
+}
+
+function renderOpenedPokemonImg(pokemonJson) {
+  let ImgDiv = document.getElementById("openedPokemonImgDiv");
+  ImgDiv.innerHTML = `<img class="openedPokemonImg" src="${pokemonJson["sprites"]["other"]["official-artwork"]["front_default"]}">`;
+  if (pokemonJson.id > 1) {
+    ImgDiv.innerHTML += `<img id="lastImage" onclick="lastImage(${pokemonJson.id})" src="./img/arrow_left.png" alt="">`;
+  }
+  if (pokemonJson.id < 1025) {
+    ImgDiv.innerHTML += `<img id="nextImage" onclick="nextImage(${pokemonJson.id})" src="./img/arrow_right.png" alt="">`;
+  }
 }
 
 async function renderPokedex(offset, limit, path = "pokemon/") {
@@ -139,10 +149,10 @@ window.addEventListener("scroll", () => {
 });
 
 async function searchPokemon() {
-  let search = document.getElementById("searchInput").value;
+  // let search = document.getElementById("searchInput").value;
   let renderedPokemon = 0;
 
-  if (search.length > 2 && !searchIsLoading) {
+  if (!searchIsLoading) {
     startLoadingAnimation();
     searchIsLoading = true;
     search = search.toLowerCase();
@@ -154,18 +164,18 @@ async function searchPokemon() {
       let pokemonJson = await pokemon.json();
       let name = pokemonJson["forms"][0]["name"];
       if (name.includes(search)) {
-        // renderedPokemon um maximal 12 zu rendern
+        // renderedPokemon um maximal 10 zu rendern
         renderedPokemon++;
         mainContainer.innerHTML += pokemonHtml(pokemonJson);
       }
-      if (renderedPokemon == 12) {
+      if (renderedPokemon == 10) {
         break;
       }
     }
     stopLoadingAnimation();
     searchIsLoading = false;
     if (mainContainer.innerHTML == "") {
-      mainContainer.innerHTML = `No Pokémon with the letters "${search}" was found.`;
+      mainContainer.innerHTML = `<span style="color: white; font-size: 1.5rem; margin-top: 58px; font-weight: bold; display: block; -webkit-text-stroke: 1px black;">Sorry, but no Pokémon with the letters "${search}" was found.</span>`;
     }
   }
 }
@@ -195,11 +205,34 @@ function closePokemonModal() {
 }
 
 function lastImage(pokemonId) {
-  pokemonId = pokemonId - 1;
+  pokemonId--;
   openPokemonModal(pokemonId);
 }
 
 function nextImage(pokemonId) {
-  pokemonId = pokemonId + 1;
+  pokemonId++;
   openPokemonModal(pokemonId);
 }
+
+{
+  /* <img id="lastImage" onclick="lastImage(${pokemonJson.id})" src="./img/arrow_left.png" alt="">
+<img id="nextImage" onclick="nextImage(${pokemonJson.id})" src="./img/arrow_right.png" alt=""> */
+}
+
+function enableSearchButton() {
+  let button = document.getElementById("searchButton");
+  let search = document.getElementById("searchInput").value;
+  if (search.length < 3) {
+    button.disabled = true;
+  }
+  if (search.length > 2) {
+    button.disabled = false;
+  }
+}
+
+document.getElementById("id_of_textbox").addEventListener("keyup", function (event) {
+  event.preventDefault();
+  if (event.keyCode === 13) {
+    document.getElementById("id_of_button").click();
+  }
+});
