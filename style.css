@@ -19,20 +19,23 @@ header {
   background-color: transparent;
   color: rgb(255, 255, 255);
   font-size: 30px;
+  overflow: hidden;
 }
 
 header h1 {
   -webkit-text-stroke: 2px black;
+  z-index: 1;
 }
 
 header img {
   height: 90px;
+  z-index: 1;
 }
 
 header input {
   margin-top: 6px;
   height: 28px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.774);
   border: 1px solid black;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
@@ -68,7 +71,7 @@ header button:hover {
 .pokemonCardBox {
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 9px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
   border: 1px solid black;
@@ -87,7 +90,6 @@ header button:hover {
 
 .pokemonImgBox {
   height: 210px;
-  width: 210px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -358,11 +360,11 @@ header button:hover {
   justify-content: center;
   align-items: center;
   display: flex;
-  animation-name: animatetop;
-  animation-duration: 0.4s;
+  animation-name: animatemodal;
+  animation-duration: 0.5s;
 }
 
-@keyframes animatetop {
+@keyframes animatemodal {
   from {
     top: 0;
     opacity: 0;
@@ -395,14 +397,6 @@ header button:hover {
   border: 1px solid black;
 }
 
-.openedPokemonInfoDiv {
-  width: 420px;
-  height: 340px;
-  background-color: white;
-  border-radius: 20px;
-  border: 1px solid black;
-}
-
 .openedPokemonDiv {
   width: 420px;
   height: 340px;
@@ -413,7 +407,7 @@ header button:hover {
 }
 
 .openedPokemonImg {
-  height: 280px;
+  height: 260px;
   position: absolute;
   position: absolute;
   margin-left: auto;
@@ -421,7 +415,18 @@ header button:hover {
   left: 0;
   right: 0;
   margin-top: 12px;
-  filter: drop-shadow(0 0 20px #ffffff);
+  filter: drop-shadow(12px 0px 0px rgba(0, 0, 0, 0.5));
+  opacity: 0;
+  transform: scale(0.7);
+  animation: fadeInScale 0.5s forwards ease-in-out;
+  
+}
+
+@keyframes fadeInScale {
+  to {
+      opacity: 1;
+      transform: scale(1);
+  }
 }
 
 .openedPokemonDiv h2 {
@@ -460,4 +465,107 @@ header button:hover {
 #nextImage:hover {
   filter: opacity(1);
   height: 42px;
+}
+
+#openedPokemonInfoDiv {
+  width: 420px;
+  height: 340px;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid black;
+}
+
+#openedPokemonInfoDiv div {
+  padding: 40px 20px 20px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+
+.bird {
+  background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/174479/bird-cells.svg);
+  background-size: auto 100%;
+  width: 88px;
+  height: 125px;
+  will-change: background-position;
+  -webkit-animation-name: fly-cycle;
+  animation-name: fly-cycle;
+  -webkit-animation-timing-function: steps(10);
+  animation-timing-function: steps(10);
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.bird--one {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s;
+}
+
+.bird-container {
+  position: absolute;
+  top: 20%;
+  left: -10%;
+  -webkit-transform: scale(0) translateX(0);
+  transform: scale(0) translateX(-10vw);
+  will-change: transform;
+  -webkit-animation-name: fly-right-one;
+  animation-name: fly-right-one;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.bird-container--one {
+  animation-duration: 15s;
+  animation-delay: 8s;
+}
+
+@keyframes fly-cycle {
+  100% {
+    background-position: -900px 0;
+  }
+}
+
+@keyframes fly-right-one {
+  0% {
+    -webkit-transform: scale(0.3) translateX(-10vw);
+    transform: scale(0.3) translateX(-10vw);
+  }
+  10% {
+    -webkit-transform: translateY(2vh) translateX(10vw) scale(0.4);
+    transform: translateY(2vh) translateX(10vw) scale(0.4);
+  }
+  20% {
+    -webkit-transform: translateY(0vh) translateX(30vw) scale(0.5);
+    transform: translateY(0vh) translateX(30vw) scale(0.5);
+  }
+  30% {
+    -webkit-transform: translateY(4vh) translateX(50vw) scale(0.6);
+    transform: translateY(4vh) translateX(50vw) scale(0.6);
+  }
+  40% {
+    -webkit-transform: translateY(2vh) translateX(70vw) scale(0.6);
+    transform: translateY(2vh) translateX(70vw) scale(0.6);
+  }
+  50% {
+    -webkit-transform: translateY(0vh) translateX(90vw) scale(0.6);
+    transform: translateY(0vh) translateX(90vw) scale(0.6);
+  }
+  60% {
+    -webkit-transform: translateY(0vh) translateX(110vw) scale(0.6);
+    transform: translateY(0vh) translateX(110vw) scale(0.6);
+  }
+  100% {
+    -webkit-transform: translateY(0vh) translateX(110vw) scale(0.6);
+    transform: translateY(0vh) translateX(110vw) scale(0.6);
+  }
+}
+
+
+.active {
+  text-decoration-line: underline;
 }

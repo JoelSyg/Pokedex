@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,15 +22,17 @@
   </head>
   <body onload="renderPokedex(offset, limit)">
     <header>
+      <div class="bird-container bird-container--one">
+        <div class="bird bird--one"></div>
+      </div>
       <img src="./img/pokeball.png" alt="" />
       <!-- <img src="./img/pokedexheader.png" alt=""> -->
       <h1>Pokédex</h1>
       <div id="searchDivHeader">
-        <input id="searchInput" type="text" placeholder='"min 3 character"' oninput="enableSearchButton()" />
+        <input id="searchInput" type="text" placeholder='"min 3 characters"' oninput="enableSearchButton()" />
         <button id="searchButton" onclick="searchPokemon()" disabled>search</button>
       </div>
     </header>
-
     <div id="mainContainer"></div>
     <div id="loadingAnimationDiv"></div>
     <div id="pokemonModal" class="modal dnone">
@@ -38,3 +41,4 @@
     </div>
   </body>
 </html>
+

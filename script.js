@@ -1,10 +1,10 @@
 const PokemonAPI_URL = "https://pokeapi.co/api/v2/";
 let offset = 0;
-const limit = 36;
+const limit = 42;
 let pokedexIsLoading = false;
 let searchIsLoading = false;
+let statsData; // Globale Variable für die Stats-Daten
 
-const ctx = document.getElementById("modalContent");
 // let pokemonNames = [];
 
 // async function addPokemonNamesToArray(path = "pokemon/") {
@@ -72,6 +72,7 @@ function pokemonHtml(pokemonJson) {
     </div>`;
 }
 
+
 async function renderOpenedPokemon(pokemonId) {
   let modalContent = document.getElementById("modalContent");
   let pokemon = await fetch(PokemonAPI_URL + "pokemon/" + [pokemonId]);
@@ -82,7 +83,12 @@ async function renderOpenedPokemon(pokemonId) {
   const backgroundColor = typeColors[type1];
   modalContent.style.backgroundColor = backgroundColor;
   renderOpenedPokemonImg(pokemonJson);
+  renderOpenedPokemonInfoDiv();
+  statsData = pokemonJson.stats; // Setze die Stats-Daten für die globale Variable
+  renderStatsChart(statsData); // Hier rufen wir renderStatsChart mit den Stats-Daten des Pokémons auf
+  console.log(pokemonJson);
 }
+
 
 function openedPokemonHtml(pokemonJson) {
   const type1 = pokemonJson["types"][0].type.name;
@@ -109,7 +115,7 @@ function openedPokemonHtml(pokemonJson) {
       <div id="openedPokemonImgDiv">
       </div>
   </div>
-  <div class="openedPokemonInfoDiv">
+  <div id="openedPokemonInfoDiv">
   </div>`;
 }
 
@@ -123,6 +129,46 @@ function renderOpenedPokemonImg(pokemonJson) {
     ImgDiv.innerHTML += `<img id="nextImage" onclick="nextImage(${pokemonJson.id})" src="./img/arrow_right.png" alt="">`;
   }
 }
+
+function renderOpenedPokemonInfoDiv() {
+  let infoDiv = document.getElementById("openedPokemonInfoDiv");
+  infoDiv.innerHTML = `
+    <div>
+      <span id="stats" onclick="showInfo('stats')" class="active">Stats</span>
+      <span id="about" onclick="showInfo('about')">About</span>
+      <span id="extra" onclick="showInfo('extra')">Extra</span>
+    </div>
+    <div id="infoContent">
+      <!-- Hier werden die Informationen für Stats, About und Extra gerendert -->
+    </div>
+  `;
+}
+
+function showInfo(section) {
+  // Markiere den ausgewählten Abschnitt
+  let allSections = document.querySelectorAll("#openedPokemonInfoDiv span");
+  allSections.forEach((span) => {
+    span.classList.remove("active");
+  });
+  document.getElementById(section).classList.add("active");
+
+  // Rendere die entsprechenden Informationen
+  let infoContent = document.getElementById("infoContent");
+  infoContent.innerHTML = ""; // Leere den Inhalt, um Platz für die neuen Informationen zu machen
+
+  // Rendere die Informationen basierend auf dem ausgewählten Abschnitt
+  if (section === "stats") {
+    // Rendere Statistiken
+    renderStatsChart(statsData); // Hier rufen wir die Funktion auf, um die Stats erneut zu rendern
+  } else if (section === "about") {
+    // Rendere Informationen zum Pokémon
+    infoContent.innerHTML = "";
+  } else if (section === "extra") {
+    // Rendere zusätzliche Informationen
+    infoContent.innerHTML = "";
+  }
+}
+
 
 async function renderPokedex(offset, limit, path = "pokemon/") {
   let mainContainer = document.getElementById("mainContainer");
@@ -149,7 +195,7 @@ window.addEventListener("scroll", () => {
 });
 
 async function searchPokemon() {
-  // let search = document.getElementById("searchInput").value;
+  let search = document.getElementById("searchInput").value;
   let renderedPokemon = 0;
 
   if (!searchIsLoading) {
@@ -230,9 +276,52 @@ function enableSearchButton() {
   }
 }
 
-document.getElementById("id_of_textbox").addEventListener("keyup", function (event) {
-  event.preventDefault();
-  if (event.keyCode === 13) {
-    document.getElementById("id_of_button").click();
+
+function renderStatsChart(statsData) {
+  // Erstelle ein Canvas-Element für das Balkendiagramm
+  let container = document.getElementById("infoContent");
+  let canvas = document.createElement("canvas");
+  canvas.id = "statsChart";
+
+  // Überprüfen, ob das Canvas-Element und der Container gültig sind
+  if (canvas && container && typeof container.appendChild === "function") {
+    container.appendChild(canvas);
+
+    // Rendere das Balkendiagramm
+    let ctx = canvas.getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["HP", "Attack", "Defense", "Sp. Attack", "Sp. Defense", "Speed"],
+        datasets: [{
+          label: "Stats",
+          data: statsData.map(stat => stat.base_stat),
+          backgroundColor: [
+            "rgba(255, 69, 58, 0.6)", // HP - Red
+            "rgba(255, 193, 7, 0.6)", // Attack - Yellow
+            "rgba(0, 204, 83, 0.6)", // Defense - Green
+            "rgba(66, 133, 244, 0.6)", // Special Attack - Blue
+            "rgba(255, 152, 0, 0.6)", // Special Defense - Orange
+            "rgba(153, 102, 204, 0.6)" // Speed - Purple
+          ],
+          borderColor: [
+            "rgba(255, 69, 58, 1)",
+            "rgba(255, 193, 7, 1)",
+            "rgba(0, 204, 83, 1)",
+            "rgba(66, 133, 244, 1)",
+            "rgba(255, 152, 0, 1)",
+            "rgba(153, 102, 204, 1)"
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
   }
-});
+}
