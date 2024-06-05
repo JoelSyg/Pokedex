@@ -1,6 +1,22 @@
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/noto-sans-jp-v52-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+@font-face {
+  font-family: "Bangers";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/bangers-v24-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+
 body {
   margin: 0;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Noto Sans JP";
   background-image: url(./img/pkmbackground.jpg);
   background-size: cover; /* Bild über die gesamte Seite strecken */
   background-attachment: fixed; /* Bild bleibt fixiert, wenn gescrollt wird */
@@ -23,13 +39,15 @@ header {
 }
 
 header h1 {
-  -webkit-text-stroke: 2px black;
   z-index: 1;
+  cursor: pointer;
+  text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black, 2px 2px 0 black;
 }
 
 header img {
   height: 90px;
   z-index: 1;
+  cursor: pointer;
 }
 
 header input {
@@ -110,10 +128,6 @@ header button:hover {
   filter: brightness(1.1) drop-shadow(0 0 20px #ffffff);
   transform: scale(1.05);
 }
-
-/* .pokemonCardId {
-  font-family: "Open Sans", sans-serif;
-} */
 
 .pokemonPreInfo {
   display: flex;
@@ -419,22 +433,21 @@ header button:hover {
   opacity: 0;
   transform: scale(0.7);
   animation: fadeInScale 0.5s forwards ease-in-out;
-  
 }
 
 @keyframes fadeInScale {
   to {
-      opacity: 1;
-      transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 .openedPokemonDiv h2 {
   font-size: 38px;
   color: rgb(255, 255, 255);
-  -webkit-text-stroke: 1px black;
   margin-bottom: 8px;
   margin-top: 16px;
+  text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black, 2px 2px 0 black;
 }
 
 #lastImage {
@@ -482,6 +495,7 @@ header button:hover {
   gap: 12px;
 }
 
+/* Bird animation */
 
 .bird {
   background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/174479/bird-cells.svg);
@@ -565,7 +579,113 @@ header button:hover {
   }
 }
 
-
 .active {
   text-decoration-line: underline;
+}
+
+#infoContent {
+  text-align: center;
+}
+
+.infoHeadlines span {
+  cursor: pointer;
+}
+
+@media (max-width: 1480px) {
+  header {
+    justify-content: start;
+  }
+
+  header img {
+    margin-left: 24px;
+  }
+
+  #searchDivHeader {
+    right: 120px;
+  }
+}
+
+@media (max-width: 1265px) {
+  #mainContainer {
+    margin-left: 32px;
+    margin-right: 32px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .bird-container--one {
+    animation-duration: 12s;
+    animation-delay: 10s;
+  }
+}
+
+@media (max-width: 780px) {
+  #searchDivHeader {
+    right: 24px;
+  }
+
+  header h1 {
+    display: none;
+  }
+
+  .bird {
+    display: none;
+  }
+}
+
+@media (max-width: 574px) {
+  #mainContainer {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .pokemonCardBox {
+    width: 180px;
+  }
+
+  .pokemonImg {
+    height: 160px;
+  }
+
+  #modalContent {
+    width: 300px;
+  }
+
+  #openedPokemonInfoDiv {
+    width: 300px;
+  }
+
+  .openedPokemonDiv {
+    width: 300px;
+  }
+}
+
+@media (max-width: 420px) {
+  #nextImage {
+    top: 81%;
+    right: 8px;
+  }
+
+  #lastImage {
+    top: 81%;
+    left: 8px;
+  }
+}
+
+@media (max-width: 390px) {
+  header input {
+    width: 110px;
+  }
+
+  header img {
+    margin-left: 12px;
+  }
+}
+
+#scrollUpButton {
+  position: fixed;
+  bottom: 20px;
+  right: 40px;
+  display: none;
+  height: 60px;
 }

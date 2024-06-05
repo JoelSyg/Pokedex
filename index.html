@@ -3,42 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Pokédex</title>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Leckerli+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bangers&family=Leckerli+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="icon" type="image/png" href="./img/pokeballIcon.png" />
   </head>
   <body onload="renderPokedex(offset, limit)">
     <header>
       <div class="bird-container bird-container--one">
         <div class="bird bird--one"></div>
       </div>
-      <img src="./img/pokeball.png" alt="" />
-      <!-- <img src="./img/pokedexheader.png" alt=""> -->
-      <h1>Pokédex</h1>
+      <img src="./img/pokeball.png" onclick="redirectToHomePage()" alt="Bild von einem Pokeball" />
+      <h1 onclick="redirectToHomePage()">Pokédex</h1>
       <div id="searchDivHeader">
         <input id="searchInput" type="text" placeholder='"min 3 characters"' oninput="enableSearchButton()" />
         <button id="searchButton" onclick="searchPokemon()" disabled>search</button>
       </div>
     </header>
-    <div id="mainContainer"></div>
+    <section id="mainContainer"></section>
     <div id="loadingAnimationDiv"></div>
     <div id="pokemonModal" class="modal dnone">
       <div class="modalBg" onclick="closePokemonModal()"></div>
       <div id="modalContent"></div>
     </div>
+    <img src="./img/arrow_up.png" id="scrollUpButton" onclick="scrollUp()" />
   </body>
 </html>
-
