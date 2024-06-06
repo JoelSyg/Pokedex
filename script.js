@@ -2,10 +2,10 @@ const PokemonAPI_URL = "https://pokeapi.co/api/v2/";
 let offset = 0;
 const limit = 42;
 let pokedexIsLoading = false;
-let statsData; // Globale Variable für die Stats-Daten
-let descriptionData = ""; // Globale Variable für die Beschreibung
+let statsData;
+let descriptionData = "";
+let currentSearchId = 0;
 
-// Für den background bei geöffnetem Pokemon
 const typeColors = {
   normal: "#c4c3a3",
   fire: "#f38c58",
@@ -37,7 +37,7 @@ async function renderPokedex(offset, limit, path = "pokemon/") {
     mainContainer.innerHTML += pokemonHtml(pokemonJson);
   }
 
-  pokedexIsLoading = false; // Set loading state to false after fetching
+  pokedexIsLoading = false;
 }
 
 function pokemonHtml(pokemonJson) {
@@ -75,7 +75,6 @@ function pokemonHtml(pokemonJson) {
     </div>`;
 }
 
-// Scroll event listener to load more Pokémon when reaching the bottom
 window.addEventListener("scroll", () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 && !pokedexIsLoading) {
     pokedexIsLoading = true;
@@ -85,35 +84,57 @@ window.addEventListener("scroll", () => {
 });
 
 async function searchPokemon() {
-  let search = document.getElementById("searchInput").value;
+  const search = document.getElementById("searchInput").value;
+  if (search.length > 2) {
+    currentSearchId++;
+    const searchId = currentSearchId;
+    startLoadingAnimation();
+    searchPokemonAsync(search, searchId);
+  }
+}
+
+async function searchPokemonAsync(search, searchId) {
+  search = search.toLowerCase();
+  const mainContainer = document.getElementById("mainContainer");
+  mainContainer.innerHTML = "";
   let renderedPokemon = 0;
 
-  startLoadingAnimation();
-  search = search.toLowerCase();
-  let mainContainer = document.getElementById("mainContainer");
-  mainContainer.innerHTML = "";
+  try {
+    for (let i = 1; i < 1026; i++) {
+      if (searchId !== currentSearchId) {
+        throw new Error("Search aborted");
+      }
 
-  for (let i = 1; i < 1026; i++) {
-    let pokemon = await fetch(PokemonAPI_URL + "pokemon/" + [i]);
-    let pokemonJson = await pokemon.json();
-    let name = pokemonJson["forms"][0]["name"];
-    if (name.includes(search)) {
-      // renderedPokemon um maximal 10 zu rendern
-      renderedPokemon++;
-      mainContainer.innerHTML += pokemonHtml(pokemonJson);
+      let pokemon = await fetch(PokemonAPI_URL + "pokemon/" + i);
+      let pokemonJson = await pokemon.json();
+      let name = pokemonJson["forms"][0]["name"];
+      if (name.includes(search)) {
+        renderedPokemon++;
+        mainContainer.innerHTML += pokemonHtml(pokemonJson);
+      }
+      if (renderedPokemon == 10) {
+        break;
+      }
     }
-    if (renderedPokemon == 10) {
-      break;
+
+    if (searchId !== currentSearchId) {
+      throw new Error("Search aborted");
     }
-  }
-  stopLoadingAnimation();
-  if (mainContainer.innerHTML == "") {
-    mainContainer.innerHTML = noPokemonFound(search); // Wenn kein passendes Pokemon gefunden wurde
+
+    stopLoadingAnimation();
+
+    if (mainContainer.innerHTML == "") {
+      mainContainer.innerHTML = noPokemonFound(search, mainContainer);
+    }
+  } catch (error) {
+    if (error.message !== "Search aborted") {
+      console.error("Search failed", error);
+    }
   }
 }
 
 function noPokemonFound(search) {
-  return `<span style="color: white; font-size: 1.5rem; margin-top: 58px; font-weight: bold; display: block; -webkit-text-stroke: 1px black;">Sorry, but no Pokémon with the letters "${search}" was found.</span>`;
+  return `<span class="noPokemonFoundText">Sorry, but no Pokémon with the letters "${search}" was found.</span>`;
 }
 
 function enableSearchButton() {
@@ -130,28 +151,23 @@ function enableSearchButton() {
 async function renderOpenedPokemon(pokemonId) {
   const modalContent = document.getElementById("modalContent");
 
-  // Fetch the Pokémon data
   const pokemonResponse = await fetch(PokemonAPI_URL + "pokemon/" + pokemonId);
   const pokemonJson = await pokemonResponse.json();
 
-  // Fetch the Pokémon species data for the description
   const speciesResponse = await fetch(PokemonAPI_URL + "pokemon-species/" + pokemonId);
   const speciesJson = await speciesResponse.json();
 
-  // Extract description from species data
   const description = extractDescription(speciesJson);
-
-  // Render the Pokémon details
   modalContent.innerHTML = openedPokemonHtml(pokemonJson);
   const type1 = pokemonJson.types[0].type.name;
   const backgroundColor = typeColors[type1];
   modalContent.style.backgroundColor = backgroundColor;
   renderOpenedPokemonImg(pokemonJson);
   renderOpenedPokemonInfoDiv();
-  statsData = pokemonJson.stats; // Setze die Stats-Daten für die globale Variable
-  renderStatsChart(statsData); // Hier rufen wir renderStatsChart mit den Stats-Daten des Pokémons auf
+  statsData = pokemonJson.stats;
+  renderStatsChart(statsData);
 
-  descriptionData = description; // Aktualisiere die globale Beschreibungsvariable
+  descriptionData = description; 
 }
 
 function extractDescription(speciesJson) {
@@ -193,16 +209,19 @@ function renderOpenedPokemonImg(pokemonJson) {
   let ImgDiv = document.getElementById("openedPokemonImgDiv");
   const arrowLeftImage = "./img/arrow_left.png";
   const arrowRightImage = "./img/arrow_right.png";
-
-  // Überprüfen Sie die Bildschirmbreite und wählen Sie das entsprechende Bild aus
   const arrowImage = window.innerWidth <= 430 ? "./img/arrow_dark_left.png" : arrowLeftImage;
   const nextArrowImage = window.innerWidth <= 430 ? "./img/arrow_dark_right.png" : arrowRightImage;
+  let innerHTML = `<img class="openedPokemonImg" src="${pokemonJson["sprites"]["other"]["official-artwork"]["front_default"]}">`;
 
-  ImgDiv.innerHTML = `
-    <img class="openedPokemonImg" src="${pokemonJson["sprites"]["other"]["official-artwork"]["front_default"]}">
-    <img id="lastImage" onclick="lastImage(${pokemonJson.id})" src="${arrowImage}" alt="">
-    <img id="nextImage" onclick="nextImage(${pokemonJson.id})" src="${nextArrowImage}" alt="">
-  `;
+  if (pokemonJson.id > 1) {
+    innerHTML += `<img id="lastImage" onclick="lastImage(${pokemonJson.id})" src="${arrowImage}" alt="">`;
+  }
+
+  if (pokemonJson.id < 1025) {
+    innerHTML += `<img id="nextImage" onclick="nextImage(${pokemonJson.id})" src="${nextArrowImage}" alt="">`;
+  }
+
+  ImgDiv.innerHTML = innerHTML;
 }
 
 function renderOpenedPokemonInfoDiv() {
@@ -218,23 +237,17 @@ function renderOpenedPokemonInfoDiv() {
 }
 
 function showInfo(section) {
-  // Markiere den ausgewählten Abschnitt
   let allSections = document.querySelectorAll("#openedPokemonInfoDiv span");
   allSections.forEach((span) => {
     span.classList.remove("active");
   });
   document.getElementById(section).classList.add("active");
-
-  // Rendere die entsprechenden Informationen
   let infoContent = document.getElementById("infoContent");
-  infoContent.innerHTML = ""; // Leere den Inhalt, um Platz für die neuen Informationen zu machen
+  infoContent.innerHTML = ""; 
 
-  // Rendere die Informationen basierend auf dem ausgewählten Abschnitt
   if (section === "stats") {
-    // Rendere Statistiken
-    renderStatsChart(statsData); // Hier rufen wir die Funktion auf, um die Stats erneut zu rendern
+    renderStatsChart(statsData); 
   } else if (section === "description") {
-    // Rendere Informationen zum Pokémon
     renderDescription();
   }
 }
@@ -263,12 +276,12 @@ function renderChart(ctx, statsData) {
           label: "Stats",
           data: statsData.map((stat) => stat.base_stat),
           backgroundColor: [
-            "rgba(255, 69, 58, 0.6)", // HP - Red
-            "rgba(255, 193, 7, 0.6)", // Attack - Yellow
-            "rgba(0, 204, 83, 0.6)", // Defense - Green
-            "rgba(66, 133, 244, 0.6)", // Special Attack - Blue
-            "rgba(255, 152, 0, 0.6)", // Special Defense - Orange
-            "rgba(153, 102, 204, 0.6)", // Speed - Purple
+            "rgba(255, 69, 58, 0.6)", 
+            "rgba(255, 193, 7, 0.6)", 
+            "rgba(0, 204, 83, 0.6)", 
+            "rgba(66, 133, 244, 0.6)", 
+            "rgba(255, 152, 0, 0.6)", 
+            "rgba(153, 102, 204, 0.6)",
           ],
           borderColor: [
             "rgba(255, 69, 58, 1)",
@@ -299,7 +312,7 @@ function renderStatsChart(statsData) {
 
 function renderDescription() {
   let container = document.getElementById("infoContent");
-  container.innerHTML = descriptionData; // Rendere die globale Beschreibung
+  container.innerHTML = descriptionData; 
 }
 
 function capitalizeFirstLetter(string) {
@@ -339,19 +352,19 @@ function nextImage(pokemonId) {
 window.addEventListener("scroll", () => {
   const scrollButton = document.getElementById("scrollUpButton");
   if (window.scrollY > 600) {
-    scrollButton.style.display = "block"; // Button anzeigen
+    scrollButton.style.display = "block"; 
   } else {
-    scrollButton.style.display = "none"; // Button ausblenden
+    scrollButton.style.display = "none"; 
   }
 });
 
 function scrollUp() {
   window.scrollTo({
-    top: 0, // Nach oben scrollen
+    top: 0, 
     behavior: "smooth",
   });
 }
 
 function redirectToHomePage() {
-  window.location.href = window.location.origin; // Leitet den Benutzer zur Startseite weiter
+  window.location.href = "index.html"; 
 }

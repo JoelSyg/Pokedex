@@ -17,7 +17,7 @@
       <img src="./img/pokeball.png" onclick="redirectToHomePage()" alt="Bild von einem Pokeball" />
       <h1 onclick="redirectToHomePage()">Pokédex</h1>
       <div id="searchDivHeader">
-        <input id="searchInput" type="text" placeholder='"min 3 characters"' oninput="enableSearchButton()" />
+        <input id="searchInput" type="text" placeholder='"min 3 characters"' onkeyup="enableSearchButton(), searchPokemon()" />
         <button id="searchButton" onclick="searchPokemon()" disabled>search</button>
       </div>
     </header>
